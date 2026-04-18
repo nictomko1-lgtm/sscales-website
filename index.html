@@ -35,7 +35,7 @@
     html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-base);
+      background-color: #000;
       color: var(--text-primary);
       line-height: 1.7;
       -webkit-font-smoothing: antialiased;
@@ -320,6 +320,16 @@
       -webkit-backdrop-filter: blur(12px);
       border-top: 1px solid var(--glass-border);
       border-bottom: 1px solid var(--glass-border);
+      overflow: hidden;
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee-scroll 43.75s linear infinite;
+    }
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
 
     /* ── Feature List ── */
@@ -587,10 +597,25 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .service-animate { animation: serviceReveal 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    #uptime-widget {
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.45s ease;
+    }
+    #uptime-widget.uptime-popped {
+      transform: scale(1.045) translateY(-3px);
+      box-shadow:
+        0 0 0 1px rgba(110,231,183,0.18),
+        0 8px 28px rgba(91,141,239,0.28),
+        0 20px 50px rgba(0,0,0,0.3);
+      z-index: 2;
+    }
+    #uptime-widget.uptime-settle {
+      transform: scale(1) translateY(0);
+      box-shadow: none;
+    }
 
     /* ── Responsive ── */
     @media (max-width: 1024px) {
-      .trust-bar-grid { grid-template-columns: repeat(2,1fr) !important; }
       .feature-row { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
       .feature-row-reverse { direction: ltr !important; }
     }
@@ -601,9 +626,91 @@
       .steps-row { flex-direction: column !important; }
       .step-connector { display: none !important; }
       .contact-grid { grid-template-columns: 1fr !important; }
-      .trust-bar-grid { grid-template-columns: 1fr !important; }
       .feature-row { grid-template-columns: 1fr !important; gap: 2rem !important; }
       .services-grid { grid-template-columns: 1fr !important; }
+    }
+
+    /* ── Section Dividers ── */
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      opacity: 0.2;
+      margin: 0;
+    }
+
+    /* ── Card Top-Edge Gradient Border ── */
+    .glass-card-service::before,
+    .glass-card::before,
+    .glass-card-pricing::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    /* ── Nav Link Animated Underline ── */
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+      transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ── Float idle animation ── */
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+
+    /* ── Hero gradient orb ── */
+    .hero-orb {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(91,141,239,0.16), transparent 65%);
+      filter: blur(60px);
+      pointer-events: none;
+      will-change: transform;
+      animation: orbDrift 12s ease-in-out infinite;
+      z-index: 0;
+    }
+    @keyframes orbDrift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50%       { transform: translate(40px, -28px) scale(1.08); }
+    }
+
+    /* ── Staggered scroll fade entrance ── */
+    .scroll-fade {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+                  background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      transition-delay: calc(var(--i, 0) * 120ms);
+    }
+    .scroll-fade.in-view {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0ms;
+    }
+
+    /* ── Service card icon box float ── */
+    #service-card-build [style*="width:46px;height:46px"] {
+      animation: floatY 4.2s ease-in-out infinite;
+      will-change: transform;
+    }
+    #service-card-hosting [style*="width:46px;height:46px"] {
+      animation: floatY 4.2s ease-in-out 0.65s infinite;
+      will-change: transform;
     }
   </style>
 
@@ -1154,9 +1261,34 @@
     #lamp-container.lamp-exit #lamp-right { animation: lampConeExit 0.35s ease-in-out 0s   forwards; }
     #lamp-container.lamp-exit #lamp-line  { animation: lampLineExit 0.7s  ease-out    0s   both; }
     #lamp-container.lamp-exit #lamp-orb   { animation: lampOrbExit  0.25s ease-in-out 0s   forwards; }
+
+    /* Sections below marquee — transparent so body gradient shows through */
+    .section-pad, #pricing, #contact, footer {
+      background-color: transparent !important;
+    }
+
+    /* Side-edge gradient — z-index: -1 puts it above body bg but below all content */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: linear-gradient(
+        to right,
+        rgba(7, 16, 31, 1) 0%,
+        transparent 31%,
+        transparent 69%,
+        rgba(7, 16, 31, 1) 100%
+      );
+    }
   </style>
 </head>
 <body>
+
+<!-- Grain noise overlay -->
+<div aria-hidden="true" style="position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.04;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22256%22 height=%22256%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');background-size:200px 200px;"></div>
+
 
 <!-- ═══════════════════════════════════════════════
      INTRO ANIMATION OVERLAY
@@ -1231,12 +1363,12 @@
           <!-- Stats row — matches real hero exactly -->
           <div id="intro-preview-stats" style="display:flex;align-items:center;justify-content:center;gap:2.5rem;margin-top:3rem;flex-wrap:wrap;">
             <div>
-              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.65rem;letter-spacing:-0.04em;color:#EFF6FF;line-height:1;">10+</div>
+              <div id="intro-stat-websites" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.65rem;letter-spacing:-0.04em;color:#EFF6FF;line-height:1;">0+</div>
               <div style="font-size:0.76rem;color:#8DA4C4;margin-top:0.3rem;white-space:nowrap;">Websites Launched</div>
             </div>
             <div style="width:1px;height:34px;background:rgba(255,255,255,0.10);"></div>
             <div>
-              <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.65rem;letter-spacing:-0.04em;color:#EFF6FF;line-height:1;">5★</div>
+              <div id="intro-stat-rating" style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.65rem;letter-spacing:-0.04em;color:#EFF6FF;line-height:1;">0★</div>
               <div style="font-size:0.76rem;color:#8DA4C4;margin-top:0.3rem;white-space:nowrap;">Avg. Client Rating</div>
             </div>
           </div>
@@ -1309,8 +1441,11 @@
   </div>
   <!-- Dot grid overlay -->
   <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background-image:radial-gradient(circle at 1px 1px, rgba(255,255,255,0.35) 1px, transparent 0);background-size:20px 20px;opacity:0.18;"></div>
+  <!-- Drifting gradient orb -->
+  <div class="hero-orb" aria-hidden="true" style="top:-80px;right:-80px;"></div>
 
-  <div class="container" style="padding-top:68px;position:relative;z-index:2;">
+
+<div class="container" style="padding-top:68px;position:relative;z-index:2;">
     <div style="max-width:680px;margin:0 auto;text-align:center;padding:5.5rem 0;">
 
       <!-- Badge pill -->
@@ -1357,58 +1492,218 @@
   </div>
 </section>
 
+<hr class="section-divider">
 
 <!-- ═══════════════════════════════════════════════
      TRUST BAR
 ═══════════════════════════════════════════════ -->
 <section class="trust-bar-glass">
-  <div class="container">
-    <div class="trust-bar-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;">
+  <div class="marquee-track">
 
-      <div style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2rem;border-right:1px solid var(--glass-border);">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(91,141,239,0.10);border:1px solid rgba(148,163,255,0.2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);">Secure Hosting</div>
-          <div style="font-size:0.78rem;color:var(--text-secondary);">SSL, uptime monitoring &amp; backups</div>
-        </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
-
-      <div style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2rem;border-right:1px solid var(--glass-border);">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(91,141,239,0.10);border:1px solid rgba(148,163,255,0.2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        </div>
-        <div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);">SEO Optimization</div>
-          <div style="font-size:0.78rem;color:var(--text-secondary);">Rank higher on Google searches</div>
-        </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Secure Hosting</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">SSL, uptime monitoring &amp; backups</div>
       </div>
-
-      <div style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2rem;border-right:1px solid var(--glass-border);">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(91,141,239,0.10);border:1px solid rgba(148,163,255,0.2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </div>
-        <div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);">99.9% Uptime</div>
-          <div style="font-size:0.78rem;color:var(--text-secondary);">Your site stays online, always</div>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2rem;">
-        <div style="width:40px;height:40px;border-radius:10px;background:rgba(91,141,239,0.10);border:1px solid rgba(148,163,255,0.2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
-        <div>
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);">No Hidden Fees</div>
-          <div style="font-size:0.78rem;color:var(--text-secondary);">Simple, transparent pricing</div>
-        </div>
-      </div>
-
     </div>
+
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">SEO Optimization</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Rank higher on Google searches</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">99.9% Uptime</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Your site stays online, always</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">No Hidden Fees</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Simple, transparent pricing</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Custom Design</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">No templates, ever</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Lifetime Support</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">We don't disappear after launch</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Conversion Focused</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Built to turn visitors into clients</div>
+      </div>
+    </div>
+
+    <!-- set 2 -->
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Secure Hosting</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">SSL, uptime monitoring &amp; backups</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">SEO Optimization</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Rank higher on Google searches</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">99.9% Uptime</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Your site stays online, always</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">No Hidden Fees</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Simple, transparent pricing</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Custom Design</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">No templates, ever</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Lifetime Support</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">We don't disappear after launch</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Conversion Focused</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Built to turn visitors into clients</div>
+      </div>
+    </div>
+
+    <!-- set 3 -->
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Secure Hosting</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">SSL, uptime monitoring &amp; backups</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">SEO Optimization</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Rank higher on Google searches</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">99.9% Uptime</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Your site stays online, always</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">No Hidden Fees</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Simple, transparent pricing</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Custom Design</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">No templates, ever</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Lifetime Support</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">We don't disappear after launch</div>
+      </div>
+    </div>
+    <div aria-hidden="true" style="display:flex;align-items:center;gap:0.75rem;padding:1.5rem 2.5rem;border-right:1px solid var(--glass-border);flex-shrink:0;">
+      <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,141,239,0.12);border:1px solid rgba(148,163,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      </div>
+      <div>
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.875rem;color:var(--text-primary);white-space:nowrap;">Conversion Focused</div>
+        <div style="font-size:0.78rem;color:var(--text-secondary);white-space:nowrap;">Built to turn visitors into clients</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
+<hr class="section-divider">
 
 <!-- ═══════════════════════════════════════════════
      SERVICES OVERVIEW
@@ -1490,13 +1785,13 @@
 
         <!-- Live status widget -->
         <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px dashed var(--glass-border);"></div>
-        <div style="margin-top:1.5rem;padding:1rem;background:rgba(255,255,255,0.025);border:1px solid var(--glass-border);border-radius:12px;position:relative;">
+        <div id="uptime-widget" style="margin-top:1.5rem;padding:1rem;background:rgba(255,255,255,0.025);border:1px solid var(--glass-border);border-radius:12px;position:relative;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.45rem;">
             <span style="font-size:0.67rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-secondary);font-family:'Inter',sans-serif;">Site Uptime</span>
-            <span style="font-size:0.67rem;font-weight:700;color:#6EE7B7;font-family:'Inter',sans-serif;">99.9% ↑</span>
+            <span id="uptime-pct" style="font-size:0.67rem;font-weight:700;color:#6EE7B7;font-family:'Inter',sans-serif;">0.0% ↑</span>
           </div>
           <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:3px;margin-bottom:0.9rem;overflow:hidden;">
-            <div style="height:100%;width:99.9%;background:linear-gradient(90deg,#5B8DEF,#6EE7B7);border-radius:3px;"></div>
+            <div id="uptime-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#5B8DEF,#6EE7B7);border-radius:3px;transition:none;"></div>
           </div>
           <div style="display:flex;flex-direction:column;gap:0.4rem;">
             <div style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.7rem;background:rgba(110,231,183,0.06);border:1px solid rgba(110,231,183,0.15);border-radius:7px;">
@@ -1524,6 +1819,7 @@
   </div>
 </section>
 
+<hr class="section-divider">
 
 <!-- ═══════════════════════════════════════════════
      PRICING
@@ -1556,7 +1852,7 @@
           <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">A fully custom site, built once and delivered ready to launch.</p>
         </div>
         <div style="margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.05);">
-          <span class="price-amount">$275</span>
+          <span class="price-amount"><span class="price-currency">$</span><span class="price-num" id="price-num-build">0</span></span>
           <span class="price-period" style="margin-left:0.4rem;">one-time</span>
         </div>
         <ul class="feature-list" style="flex:1;margin-bottom:1.75rem;margin-top:auto;">
@@ -1580,7 +1876,7 @@
           <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">Keep your site live, secure, and up to date — no stress.</p>
         </div>
         <div style="margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.05);">
-          <span class="price-amount">$50</span>
+          <span class="price-amount"><span class="price-currency">$</span><span class="price-num" id="price-num-starter">0</span></span>
           <span class="price-period" style="margin-left:0.4rem;">/ month</span>
         </div>
         <ul class="feature-list" style="flex:1;margin-bottom:1.75rem;margin-top:auto;">
@@ -1607,13 +1903,13 @@
           <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;">For businesses serious about getting found and winning more clients.</p>
         </div>
         <div style="margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(148,163,255,0.1);">
-          <span class="price-amount">$75</span>
+          <span class="price-amount"><span class="price-currency">$</span><span class="price-num" id="price-num-growth">0</span></span>
           <span class="price-period" style="margin-left:0.4rem;">/ month</span>
         </div>
         <ul class="feature-list" style="flex:1;margin-bottom:1.75rem;margin-top:auto;">
           <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Everything in Starter</li>
-          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span style="color:var(--text-primary);">SEO optimization</span> — keywords, meta tags, local targeting</li>
-          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span style="color:var(--text-primary);">Performance optimization</span> — speed &amp; conversions</li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span style="display:flex;flex-direction:column;gap:0.1rem;"><span style="color:var(--text-primary);">SEO optimization</span><span>— keywords, meta tags, local targeting</span></span></li>
+          <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span style="display:flex;flex-direction:column;gap:0.1rem;"><span style="color:var(--text-primary);">Performance optimization</span><span>— speed &amp; conversions</span></span></li>
           <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span style="color:var(--text-primary);">5 website edits</span> per month</li>
           <li><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Cancel anytime</li>
         </ul>
@@ -1642,20 +1938,20 @@
     </div>
 
     <div class="steps-row" style="display:flex;align-items:flex-start;max-width:860px;margin:0 auto;">
-      <div style="flex:1;text-align:center;">
-        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number">1</div></div>
+      <div class="scroll-fade" style="--i:0;flex:1;text-align:center;">
+        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatY 4.0s ease-in-out 0s infinite;">1</div></div>
         <h3 class="heading-lg" style="font-size:1.1rem;color:var(--text-primary);margin-bottom:0.6rem;">Reach Out</h3>
         <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.65;max-width:200px;margin:0 auto;">Fill out the contact form or send an email. Tell us about your business.</p>
       </div>
       <div class="step-connector"></div>
-      <div style="flex:1;text-align:center;">
-        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number">2</div></div>
+      <div class="scroll-fade" style="--i:1;flex:1;text-align:center;">
+        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatY 4.0s ease-in-out 0.5s infinite;">2</div></div>
         <h3 class="heading-lg" style="font-size:1.1rem;color:var(--text-primary);margin-bottom:0.6rem;">We Build</h3>
         <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.65;max-width:200px;margin:0 auto;">Your custom site is designed and delivered — typically within one week.</p>
       </div>
       <div class="step-connector"></div>
-      <div style="flex:1;text-align:center;">
-        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number">3</div></div>
+      <div class="scroll-fade" style="--i:2;flex:1;text-align:center;">
+        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatY 4.0s ease-in-out 1.0s infinite;">3</div></div>
         <h3 class="heading-lg" style="font-size:1.1rem;color:var(--text-primary);margin-bottom:0.6rem;">You Grow</h3>
         <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.65;max-width:200px;margin:0 auto;">Go live, choose a hosting plan, and start getting found by more customers.</p>
       </div>
@@ -1701,6 +1997,7 @@
   </div>
 </section>
 
+<hr class="section-divider">
 
 <!-- ═══════════════════════════════════════════════
      CONTACT
@@ -1749,7 +2046,7 @@
       </div>
 
       <div style="display:flex;flex-direction:column;gap:1.25rem;">
-        <div class="glass-card" style="padding:1.75rem;">
+        <div class="glass-card scroll-fade" style="--i:0;padding:1.75rem;">
           <span class="card-corner card-corner-tl"></span>
           <span class="card-corner card-corner-tr"></span>
           <span class="card-corner card-corner-bl"></span>
@@ -1769,7 +2066,7 @@
           </a>
         </div>
 
-        <div class="glass-card" style="padding:1.75rem;">
+        <div class="glass-card scroll-fade" style="--i:1;padding:1.75rem;">
           <span class="card-corner card-corner-tl"></span>
           <span class="card-corner card-corner-tr"></span>
           <span class="card-corner card-corner-bl"></span>
@@ -1888,6 +2185,16 @@
       }, enterDelays[i]);
     });
 
+    // Count-up price numbers in sync with each card's entrance
+    const priceTargets = [275, 50, 75];
+    const priceIds = ['price-num-build', 'price-num-starter', 'price-num-growth'];
+    priceIds.forEach((id, i) => {
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el && window.animateCounter) window.animateCounter(el, priceTargets[i], '', 900);
+      }, enterDelays[i]);
+    });
+
     // Phase 2: after last card fully enters (~1200 + 850 = ~2050ms),
     // remove enter animations and let CSS transitions handle focus/dim.
     // Double-rAF ensures browser commits natural state before class transitions fire.
@@ -1920,6 +2227,70 @@
     setTimeout(() => serviceHosting.classList.add('service-animate'), 150);
   }, { threshold: 0.15 });
   servicesObserver.observe(document.getElementById('services'));
+</script>
+
+<!-- ── Scroll Animations Script ── -->
+<script>
+(function() {
+  // ── Stat counters ──
+  window.animateCounter = function animateCounter(el, target, suffix, duration) {
+    const start = performance.now();
+    (function tick(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(eased * target) + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+    })(start);
+  }
+  const statObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      animateCounter(el, parseInt(el.dataset.count), el.dataset.suffix || '', 1400);
+      statObserver.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-count]').forEach(el => statObserver.observe(el));
+
+  // ── Uptime bar + counter ──
+  const uptimeTarget = 99.9;
+  const uptimeDuration = 1800;
+  const uptimeWidget = document.getElementById('uptime-widget');
+  const uptimePct = document.getElementById('uptime-pct');
+  const uptimeBar = document.getElementById('uptime-bar');
+  if (uptimeWidget && uptimePct && uptimeBar) {
+    const uptimeObserver = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) return;
+      uptimeObserver.disconnect();
+      uptimeWidget.classList.add('uptime-popped');
+      const start = performance.now();
+      (function tick(now) {
+        const t = Math.min((now - start) / uptimeDuration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const val = (eased * uptimeTarget).toFixed(1);
+        uptimePct.textContent = val + '% ↑';
+        uptimeBar.style.width = val + '%';
+        if (t < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          uptimeWidget.classList.remove('uptime-popped');
+          uptimeWidget.classList.add('uptime-settle');
+        }
+      })(start);
+    }, { threshold: 0.5 });
+    uptimeObserver.observe(uptimeWidget);
+  }
+
+  // ── Staggered scroll fade ──
+  const fadeObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('in-view');
+      fadeObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.scroll-fade').forEach(el => fadeObserver.observe(el));
+})();
 </script>
 
 <!-- ── Intro Animation Script ── -->
@@ -2008,6 +2379,13 @@
     progTrack.classList.add('fade-out');
     setTimeout(() => {
       heroPreview.classList.add('visible');
+      // Trigger count-up on intro stats when they transition into view (480ms stagger delay)
+      setTimeout(() => {
+        const ws = document.getElementById('intro-stat-websites');
+        const rt = document.getElementById('intro-stat-rating');
+        if (ws && window.animateCounter) window.animateCounter(ws, 10, '+', 1000);
+        if (rt && window.animateCounter) window.animateCounter(rt, 5, '★', 1000);
+      }, 480);
       // Show scroll hint after hero preview is visible
       setTimeout(() => {
         scrollHint.classList.add('visible');
@@ -2072,6 +2450,12 @@
             el.style.opacity = '1';
             el.style.transform = 'none';
           });
+          // Re-enable float animation on hero badge now that intro is done
+          const heroBadge = document.querySelector('.hero-badge');
+          if (heroBadge) {
+            heroBadge.style.animation = 'floatY 3.8s ease-in-out infinite';
+            heroBadge.style.willChange = 'transform';
+          }
         }, 200);
       }
     }
