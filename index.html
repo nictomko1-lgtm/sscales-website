@@ -609,6 +609,21 @@
     .section-pad { padding: 6rem 2rem; }
     .container { max-width: 1120px; margin: 0 auto; }
 
+    /* ── Grid Background with fade-edges (50% reduced fade) ── */
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse at center, black 50%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 50%, transparent 100%);
+    }
+    .section-pad, #pricing, #contact { position: relative; }
+
     /* ── Service Cards ── */
     .card {
       background: var(--bg-elevated);
@@ -1372,10 +1387,10 @@
       pointer-events: none;
       background: linear-gradient(
         to right,
-        rgba(7, 16, 31, 1) 0%,
+        rgba(14, 38, 90, 0.44) 0%,
         transparent 42%,
         transparent 58%,
-        rgba(7, 16, 31, 1) 100%
+        rgba(14, 38, 90, 0.44) 100%
       );
     }
   </style>
@@ -1805,7 +1820,8 @@
      SERVICES OVERVIEW
 ═══════════════════════════════════════════════ -->
 <section id="services" class="section-pad">
-  <div class="container">
+  <div class="grid-bg"></div>
+  <div class="container" style="position:relative;z-index:1;">
     <div style="text-align:center;margin-bottom:3.5rem;">
       <div class="label-tag" style="margin-bottom:0.75rem;">What We Offer</div>
       <h2 class="heading-lg" style="font-size:2.25rem;color:var(--text-primary);max-width:480px;margin:0 auto;">
@@ -1921,6 +1937,7 @@
      PRICING
 ═══════════════════════════════════════════════ -->
 <section id="pricing" style="padding:6rem 2rem;position:relative;overflow:hidden;">
+  <div class="grid-bg"></div>
   <!-- Background glow for pricing section -->
   <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:400px;background:radial-gradient(ellipse, rgba(91,141,239,0.08) 0%, transparent 70%);pointer-events:none;z-index:0;"></div>
 
@@ -2062,7 +2079,8 @@
      PORTFOLIO
 ═══════════════════════════════════════════════ -->
 <section id="portfolio" class="section-pad">
-  <div class="container">
+  <div class="grid-bg"></div>
+  <div class="container" style="position:relative;z-index:1;">
     <div style="text-align:center;margin-bottom:3.5rem;">
       <div class="label-tag" style="margin-bottom:0.75rem;">Our Work</div>
       <h2 class="heading-lg" style="font-size:2.25rem;color:var(--text-primary);margin-bottom:1rem;">
@@ -2105,7 +2123,8 @@
      CONTACT
 ═══════════════════════════════════════════════ -->
 <section id="contact" class="section-pad" style="background:rgba(255,255,255,0.015);">
-  <div class="container">
+  <div class="grid-bg"></div>
+  <div class="container" style="position:relative;z-index:1;">
     <div style="text-align:center;margin-bottom:3.5rem;">
       <div class="label-tag" style="margin-bottom:0.75rem;">Get In Touch</div>
       <h2 class="heading-lg" style="font-size:2.25rem;color:var(--text-primary);margin-bottom:1rem;">
