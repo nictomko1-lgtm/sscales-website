@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#07101F"/>
+
+  <!-- Subtle radial glow top-left -->
+  <radialGradient id="glow1" cx="20%" cy="30%" r="50%">
+    <stop offset="0%" stop-color="#5B8DEF" stop-opacity="0.18"/>
+    <stop offset="100%" stop-color="#07101F" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="1200" height="630" fill="url(#glow1)"/>
+
+  <!-- Subtle radial glow bottom-right -->
+  <radialGradient id="glow2" cx="80%" cy="75%" r="45%">
+    <stop offset="0%" stop-color="#7850C8" stop-opacity="0.14"/>
+    <stop offset="100%" stop-color="#07101F" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+
+  <!-- Logo mark -->
+  <rect x="80" y="80" width="64" height="64" rx="12" fill="#0D1E35" stroke="#5B8DEF" stroke-opacity="0.4" stroke-width="1.5"/>
+  <text x="112" y="130" font-family="Georgia, serif" font-size="44" font-weight="700" fill="#5B8DEF" text-anchor="middle">S</text>
+
+  <!-- Brand name -->
+  <text x="80" y="250" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="700" fill="#EFF6FF" letter-spacing="-2" dominant-baseline="auto">Signature Scales</text>
+
+  <!-- Tagline -->
+  <text x="80" y="320" font-family="Arial, Helvetica, sans-serif" font-size="32" fill="#8DA4C4" letter-spacing="0">Professional Websites. Built to Scale.</text>
+
+  <!-- Divider -->
+  <rect x="80" y="370" width="120" height="2" rx="1" fill="#5B8DEF" opacity="0.6"/>
+
+  <!-- Supporting detail -->
+  <text x="80" y="430" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#8DA4C4">Starting at $275 &bull; Hosting from $50/mo</text>
+
+  <!-- Domain pill -->
+  <rect x="80" y="505" width="310" height="52" rx="26" fill="#0D1E35" stroke="#5B8DEF" stroke-opacity="0.35" stroke-width="1.5"/>
+  <text x="235" y="538" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#7AA4F5" text-anchor="middle">signaturescales.ca</text>
+</svg>

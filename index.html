@@ -3,12 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Signature Scales — Option A (Glass)</title>
+  <title>Signature Scales — Professional Websites for Small Businesses</title>
   <meta name="description" content="Signature Scales builds and hosts professional websites for small businesses. Starting at $275 with monthly hosting plans from $50/mo." />
+
+  <!-- Canonical & Indexing -->
+  <link rel="canonical" href="https://www.signaturescales.ca/" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Signature Scales" />
+  <meta name="theme-color" content="#07101F" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.signaturescales.ca/" />
+  <meta property="og:title" content="Signature Scales — Professional Websites for Small Businesses" />
+  <meta property="og:description" content="Signature Scales builds and hosts professional websites for small businesses. Starting at $275 with monthly hosting plans from $50/mo." />
+  <meta property="og:image" content="https://www.signaturescales.ca/assets/og-image.svg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Signature Scales — Professional Websites for Small Businesses" />
+  <meta property="og:locale" content="en_CA" />
+  <meta property="og:site_name" content="Signature Scales" />
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Signature Scales — Professional Websites for Small Businesses" />
+  <meta name="twitter:description" content="Signature Scales builds and hosts professional websites for small businesses. Starting at $275 with monthly hosting plans from $50/mo." />
+  <meta name="twitter:image" content="https://www.signaturescales.ca/assets/og-image.svg" />
+  <meta name="twitter:image:alt" content="Signature Scales — Professional Websites for Small Businesses" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+  <link rel="manifest" href="/manifest.json" />
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Ephesis&display=swap" rel="stylesheet" />
 
   <style>
     /* ── Design Tokens — Option A: Navy Foundation + Glass ── */
@@ -124,6 +155,70 @@
     }
     .btn-primary:active { transform: translateY(0); opacity: 1; }
     .btn-primary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    /* Submit button state machine */
+    #submitBtn { transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.3s ease, background 0.4s ease; }
+    #submitBtn .btn-icon-send,
+    #submitBtn .btn-icon-spinner,
+    #submitBtn .btn-icon-check { display: inline-flex; align-items: center; }
+    #submitBtn .btn-icon-spinner,
+    #submitBtn .btn-icon-check { display: none; }
+    #submitBtn.btn-sending .btn-icon-send,
+    #submitBtn.btn-sending .btn-icon-check { display: none; }
+    #submitBtn.btn-sending .btn-icon-spinner { display: inline-flex; }
+    #submitBtn.btn-sent .btn-icon-send,
+    #submitBtn.btn-sent .btn-icon-spinner { display: none; }
+    #submitBtn.btn-sent .btn-icon-check { display: inline-flex; }
+    #submitBtn.btn-sending { opacity: 0.7; cursor: not-allowed; transform: none !important; }
+    #submitBtn.btn-sent {
+      background: linear-gradient(135deg, rgba(91,141,239,0.35) 0%, rgba(148,163,255,0.2) 100%);
+      box-shadow: 0 0 24px rgba(91,141,239,0.25), 0 2px 8px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.12);
+      cursor: default;
+      pointer-events: none;
+    }
+    #submitBtn.btn-sent:hover { opacity: 1; transform: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes drawCheck { from { stroke-dashoffset: 28; } to { stroke-dashoffset: 0; } }
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes breatheGlow {
+      0%, 100% {
+        box-shadow: 0 0 0 1px rgba(148,163,255,0.18), 0 8px 28px rgba(91,141,239,0.22), 0 24px 52px rgba(0,0,0,0.28);
+      }
+      50% {
+        box-shadow: 0 0 0 1px rgba(148,163,255,0.38), 0 8px 40px rgba(91,141,239,0.44), 0 24px 64px rgba(0,0,0,0.34);
+      }
+    }
+    @keyframes cardBreathe {
+      0%, 100% {
+        transform: scale(1.0) translateY(0px);
+        box-shadow: 0 0 0 1px rgba(148,163,255,0.18), 0 8px 28px rgba(91,141,239,0.22), 0 24px 52px rgba(0,0,0,0.28);
+      }
+      50% {
+        transform: scale(1.032) translateY(-2.8px);
+        box-shadow: 0 0 0 1px rgba(148,163,255,0.27), 0 8px 40px rgba(91,141,239,0.31), 0 24px 64px rgba(0,0,0,0.24);
+      }
+    }
+    #noCommitCard {
+      animation: cardBreathe 3s ease-in-out infinite;
+      position: relative;
+      z-index: 2;
+    }
+    .btn-icon-spinner svg { animation: spin 0.75s linear infinite; }
+    #submitBtn.btn-sent .btn-icon-check polyline { animation: drawCheck 0.45s cubic-bezier(0.4,0,0.2,1) forwards; }
+    #sentConfirm {
+      display: none;
+      margin-top: 0.9rem;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+    }
+    #sentConfirm.visible {
+      display: flex;
+      animation: fadeSlideUp 0.5s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
 
     .btn-glass {
       display: inline-flex;
@@ -318,8 +413,6 @@
       background: rgba(255,255,255,0.025);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid var(--glass-border);
-      border-bottom: 1px solid var(--glass-border);
       overflow: hidden;
     }
     .marquee-track {
@@ -434,17 +527,15 @@
 
     /* ── Portfolio ── */
     .portfolio-glass {
+      position: relative;
       background: var(--glass-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
-      border-radius: 22px;
-      overflow: hidden;
+      border-radius: 0;
+      overflow: visible;
       transition: transform 0.25s ease, box-shadow 0.25s ease;
-      box-shadow:
-        0 4px 8px rgba(0,0,0,0.25),
-        0 12px 40px rgba(0,0,0,0.2),
-        inset 0 1px 0 rgba(255,255,255,0.08);
+      animation: breatheGlow 3s ease-in-out infinite;
     }
     .portfolio-glass:hover {
       transform: translateY(-6px);
@@ -476,7 +567,7 @@
       box-shadow: 0 0 0 3px rgba(91,141,239,0.12);
     }
     .form-field:hover:not(:focus) { border-color: rgba(255,255,255,0.15); }
-    textarea.form-field { resize: vertical; min-height: 120px; }
+    textarea.form-field { resize: none; min-height: 80px; }
 
     .form-label {
       display: block;
@@ -626,6 +717,7 @@
       .steps-row { flex-direction: column !important; }
       .step-connector { display: none !important; }
       .contact-grid { grid-template-columns: 1fr !important; }
+      .contact-grid > div:last-child { min-height: 280px; }
       .feature-row { grid-template-columns: 1fr !important; gap: 2rem !important; }
       .services-grid { grid-template-columns: 1fr !important; }
     }
@@ -635,7 +727,7 @@
       border: none;
       height: 1px;
       background: linear-gradient(to right, transparent, var(--accent), transparent);
-      opacity: 0.2;
+      opacity: 0.35;
       margin: 0;
     }
 
@@ -669,6 +761,10 @@
     @keyframes floatY {
       0%, 100% { transform: translateY(0); }
       50%       { transform: translateY(-6px); }
+    }
+    @keyframes floatYStep {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6.6px); }
     }
 
     /* ── Hero gradient orb ── */
@@ -1277,8 +1373,8 @@
       background: linear-gradient(
         to right,
         rgba(7, 16, 31, 1) 0%,
-        transparent 31%,
-        transparent 69%,
+        transparent 42%,
+        transparent 58%,
         rgba(7, 16, 31, 1) 100%
       );
     }
@@ -1357,7 +1453,7 @@
           </h2>
           <p id="intro-preview-sub">Custom sites for small businesses — designed to convert, built to last.</p>
           <div id="intro-preview-btns">
-            <span class="intro-preview-btn-primary">Get Your Website <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            <a href="#contact" class="intro-preview-btn-primary">Get Your Website <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
             <span class="intro-preview-btn-glass">See Pricing</span>
           </div>
           <!-- Stats row — matches real hero exactly -->
@@ -1466,7 +1562,7 @@
       </p>
 
       <div class="hero-animate hero-animate-4" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;justify-content:center;">
-        <a href="https://buy.stripe.com/14AdR1cLXa6L6csaKP0VO01" class="btn-primary" style="font-size:0.95rem;padding:0.8rem 1.75rem;">
+        <a href="#contact" class="btn-primary" style="font-size:0.95rem;padding:0.8rem 1.75rem;">
           Get Your Website
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
@@ -1924,11 +2020,12 @@
   </div>
 </section>
 
+<hr class="section-divider">
 
 <!-- ═══════════════════════════════════════════════
      HOW IT WORKS
 ═══════════════════════════════════════════════ -->
-<section class="section-pad" style="background:rgba(255,255,255,0.015);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border);">
+<section class="section-pad" style="background:rgba(255,255,255,0.015);">
   <div class="container">
     <div style="text-align:center;margin-bottom:3.5rem;">
       <div class="label-tag" style="margin-bottom:0.75rem;">The Process</div>
@@ -1939,19 +2036,19 @@
 
     <div class="steps-row" style="display:flex;align-items:flex-start;max-width:860px;margin:0 auto;">
       <div class="scroll-fade" style="--i:0;flex:1;text-align:center;">
-        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatY 4.0s ease-in-out 0s infinite;">1</div></div>
+        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatYStep 3.6s ease-in-out 0s infinite, breatheGlow 3s ease-in-out 0s infinite;">1</div></div>
         <h3 class="heading-lg" style="font-size:1.1rem;color:var(--text-primary);margin-bottom:0.6rem;">Reach Out</h3>
         <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.65;max-width:200px;margin:0 auto;">Fill out the contact form or send an email. Tell us about your business.</p>
       </div>
       <div class="step-connector"></div>
       <div class="scroll-fade" style="--i:1;flex:1;text-align:center;">
-        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatY 4.0s ease-in-out 0.5s infinite;">2</div></div>
+        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatYStep 3.6s ease-in-out 0.5s infinite, breatheGlow 3s ease-in-out 0.5s infinite;">2</div></div>
         <h3 class="heading-lg" style="font-size:1.1rem;color:var(--text-primary);margin-bottom:0.6rem;">We Build</h3>
         <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.65;max-width:200px;margin:0 auto;">Your custom site is designed and delivered — typically within one week.</p>
       </div>
       <div class="step-connector"></div>
       <div class="scroll-fade" style="--i:2;flex:1;text-align:center;">
-        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatY 4.0s ease-in-out 1.0s infinite;">3</div></div>
+        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatYStep 3.6s ease-in-out 1.0s infinite, breatheGlow 3s ease-in-out 1.0s infinite;">3</div></div>
         <h3 class="heading-lg" style="font-size:1.1rem;color:var(--text-primary);margin-bottom:0.6rem;">You Grow</h3>
         <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.65;max-width:200px;margin:0 auto;">Go live, choose a hosting plan, and start getting found by more customers.</p>
       </div>
@@ -1959,6 +2056,7 @@
   </div>
 </section>
 
+<hr class="section-divider">
 
 <!-- ═══════════════════════════════════════════════
      PORTFOLIO
@@ -1973,22 +2071,26 @@
       <p style="color:var(--text-secondary);max-width:440px;margin:0 auto;font-size:0.95rem;">Here's what we build. Professional, polished, and built to convert.</p>
     </div>
 
-    <div style="max-width:760px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;max-width:1000px;margin:0 auto;">
       <div class="portfolio-glass">
-        <div style="position:relative;overflow:hidden;max-height:380px;">
-          <img src="assets/ssc-portfolio.png" alt="Signature Car Care website" style="width:100%;display:block;object-fit:cover;object-position:top;" />
-          <div style="position:absolute;inset:0;background:linear-gradient(to bottom, transparent 50%, rgba(7,16,31,0.9) 100%);pointer-events:none;"></div>
+        <span class="card-corner card-corner-tl"></span>
+        <span class="card-corner card-corner-tr"></span>
+        <span class="card-corner card-corner-bl"></span>
+        <span class="card-corner card-corner-br"></span>
+        <div style="position:relative;overflow:hidden;height:200px;">
+          <img src="assets/ssc-portfolio.png" alt="Signature Car Care website" loading="lazy" width="1200" height="800" style="width:100%;height:100%;display:block;object-fit:cover;object-position:top;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(7,16,31,0.9) 100%);pointer-events:none;"></div>
         </div>
-        <div style="padding:1.75rem 2rem 2rem;">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+        <div style="padding:1.25rem 1.5rem 1.5rem;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.75rem;flex-wrap:wrap;">
             <div>
               <div class="label-tag" style="margin-bottom:0.4rem;">Auto Detailing</div>
-              <h3 class="heading-lg" style="font-size:1.3rem;color:var(--text-primary);margin-bottom:0.5rem;">Signature Car Care</h3>
-              <p style="font-size:0.875rem;color:var(--text-secondary);max-width:440px;line-height:1.6;">Custom website featuring a full services menu, photo gallery, before-and-after showcase, and booking call-to-action. Designed to build trust and drive appointments.</p>
+              <h3 class="heading-lg" style="font-size:1.1rem;color:var(--text-primary);margin-bottom:0.4rem;">Signature Car Care</h3>
+              <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.55;">Custom website with services menu, photo gallery, and booking CTA.</p>
             </div>
-            <a href="#" class="btn-glass" style="flex-shrink:0;font-size:0.82rem;padding:0.55rem 1.1rem;">
+            <a href="https://scc-website-beta.vercel.app/" target="_blank" rel="noopener" class="btn-glass" style="flex-shrink:0;font-size:0.78rem;padding:0.45rem 0.9rem;">
               View Live Site
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
             </a>
           </div>
         </div>
@@ -2002,7 +2104,7 @@
 <!-- ═══════════════════════════════════════════════
      CONTACT
 ═══════════════════════════════════════════════ -->
-<section id="contact" class="section-pad" style="background:rgba(255,255,255,0.015);border-top:1px solid var(--glass-border);">
+<section id="contact" class="section-pad" style="background:rgba(255,255,255,0.015);">
   <div class="container">
     <div style="text-align:center;margin-bottom:3.5rem;">
       <div class="label-tag" style="margin-bottom:0.75rem;">Get In Touch</div>
@@ -2012,40 +2114,11 @@
       <p style="color:var(--text-secondary);max-width:440px;margin:0 auto;font-size:0.95rem;">Tell us about your business and what you're looking for. We'll get back to you within 24 hours.</p>
     </div>
 
-    <div class="contact-grid" style="display:grid;grid-template-columns:1fr 420px;gap:2.5rem;max-width:960px;margin:0 auto;align-items:start;">
+    <div class="contact-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;max-width:1320px;margin:0 auto;align-items:start;">
 
-      <div class="glass-card" style="padding:2rem;">
-        <span class="card-corner card-corner-tl"></span>
-        <span class="card-corner card-corner-tr"></span>
-        <span class="card-corner card-corner-bl"></span>
-        <span class="card-corner card-corner-br"></span>
-        <form id="contactForm">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-            <div>
-              <label class="form-label" for="name">Your Name</label>
-              <input class="form-field" type="text" id="name" name="name" placeholder="John Smith" required />
-            </div>
-            <div>
-              <label class="form-label" for="business">Business Name</label>
-              <input class="form-field" type="text" id="business" name="business" placeholder="Smith's Plumbing" required />
-            </div>
-          </div>
-          <div style="margin-bottom:1rem;">
-            <label class="form-label" for="email">Email Address</label>
-            <input class="form-field" type="email" id="email" name="email" placeholder="john@smithsplumbing.com" required />
-          </div>
-          <div style="margin-bottom:1.5rem;">
-            <label class="form-label" for="message">Tell Us About Your Business</label>
-            <textarea class="form-field" id="message" name="message" placeholder="What kind of business do you run? What are you looking for in a website?" required></textarea>
-          </div>
-          <button type="submit" class="btn-primary" style="width:100%;justify-content:center;font-size:0.95rem;padding:0.85rem;">
-            Send Message
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
-        </form>
-      </div>
-
+      <!-- Support cards — 1st column -->
       <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
         <div class="glass-card scroll-fade" style="--i:0;padding:1.75rem;">
           <span class="card-corner card-corner-tl"></span>
           <span class="card-corner card-corner-tr"></span>
@@ -2060,9 +2133,9 @@
               <div style="font-size:0.78rem;color:var(--text-secondary);">We typically respond within 24 hours.</div>
             </div>
           </div>
-          <a href="mailto:nictomko1@gmail.com?subject=Website%20Inquiry%20—%20Signature%20Scales&body=Hi%2C%20I%27m%20interested%20in%20getting%20a%20website%20built%20for%20my%20business." class="btn-glass" style="width:100%;justify-content:center;font-size:0.85rem;">
+          <a href="mailto:signaturescalescontact@gmail.com?subject=Website%20Inquiry%20—%20Signature%20Scales&body=Hi%2C%20I%27m%20interested%20in%20getting%20a%20website%20built%20for%20my%20business." class="btn-glass" style="width:100%;justify-content:center;font-size:0.85rem;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            nictomko1@gmail.com
+            signaturescalescontact@gmail.com
           </a>
         </div>
 
@@ -2079,10 +2152,79 @@
           </a>
         </div>
 
-        <div style="padding:1.25rem;border-radius:12px;background:rgba(91,141,239,0.05);border:1px solid rgba(148,163,255,0.12);backdrop-filter:blur(8px);">
+        <div id="noCommitCard" style="padding:1.25rem;border-radius:12px;background:rgba(91,141,239,0.05);border:1px solid rgba(148,163,255,0.12);backdrop-filter:blur(8px);">
           <p style="font-size:0.8rem;color:var(--text-secondary);line-height:1.65;margin:0;">
             <span style="color:#A5B4FC;font-weight:600;">No commitment required.</span> Reach out with questions, get a sense of the process, and only move forward when you're ready.
           </p>
+        </div>
+      </div>
+
+      <!-- Contact form — 2nd column -->
+      <div class="glass-card" style="padding:2rem;">
+        <span class="card-corner card-corner-tl"></span>
+        <span class="card-corner card-corner-tr"></span>
+        <span class="card-corner card-corner-bl"></span>
+        <span class="card-corner card-corner-br"></span>
+        <form id="contactForm" data-fs-submit-btn="submitBtn" style="padding-top:1.5rem;">
+          <div data-fs-success style="display:none;text-align:center;padding:2rem 0;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 1rem;display:block;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text-primary);margin-bottom:0.5rem;">Message Sent!</div>
+            <p style="color:var(--text-secondary);font-size:0.9rem;">Thanks for reaching out. We'll get back to you within 24 hours.</p>
+          </div>
+          <div id="formFields">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+              <div>
+                <label class="form-label" for="name">Your Name</label>
+                <input class="form-field" type="text" id="name" name="name" placeholder="John Smith" required data-fs-field />
+                <span data-fs-error="name" style="color:#f87171;font-size:0.78rem;margin-top:0.25rem;display:block;"></span>
+              </div>
+              <div>
+                <label class="form-label" for="business">Business Name</label>
+                <input class="form-field" type="text" id="business" name="business" placeholder="Smith's Plumbing" required data-fs-field />
+              </div>
+            </div>
+            <div style="margin-bottom:1rem;">
+              <label class="form-label" for="email">Email Address</label>
+              <input class="form-field" type="email" id="email" name="email" placeholder="john@smithsplumbing.com" required data-fs-field />
+              <span data-fs-error="email" style="color:#f87171;font-size:0.78rem;margin-top:0.25rem;display:block;"></span>
+            </div>
+            <div style="margin-bottom:1.5rem;">
+              <label class="form-label" for="message">Tell Us About Your Business</label>
+              <textarea class="form-field" id="message" name="message" placeholder="What kind of business do you run? What are you looking for in a website?" required data-fs-field></textarea>
+              <span data-fs-error="message" style="color:#f87171;font-size:0.78rem;margin-top:0.25rem;display:block;"></span>
+            </div>
+            <div data-fs-error style="color:#f87171;font-size:0.82rem;margin-bottom:0.75rem;display:none;"></div>
+            <button id="submitBtn" type="submit" class="btn-primary" style="width:100%;justify-content:center;font-size:0.95rem;padding:0.85rem;" data-fs-submit-btn>
+              <span class="btn-icon btn-icon-send"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></span>
+              <span class="btn-icon btn-icon-spinner"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></span>
+              <span class="btn-icon btn-icon-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" stroke-dasharray="28" stroke-dashoffset="28"/></svg></span>
+              <span class="btn-label">Send Message</span>
+            </button>
+            <div id="sentConfirm">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A5B4FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              We'll get back to you within 24 hours.
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Founder photo — 3rd column -->
+      <div class="glass-card scroll-fade" style="--i:2;padding:0;align-self:stretch;display:flex;flex-direction:column;">
+        <span class="card-corner card-corner-tl"></span>
+        <span class="card-corner card-corner-tr"></span>
+        <span class="card-corner card-corner-bl"></span>
+        <span class="card-corner card-corner-br"></span>
+        <div style="position:relative;flex:1;min-height:0;overflow:hidden;">
+          <img src="assets/LBWRX7-116.JPEG" alt="Nick, founder" loading="lazy" width="800" height="1000" style="width:100%;height:100%;display:block;object-fit:cover;object-position:38% 55%;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 55%,rgba(7,16,31,0.92) 100%);pointer-events:none;"></div>
+        </div>
+        <div style="padding:1.1rem 1.4rem 1.4rem;">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.65rem;">
+            <span style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:0.97rem;color:var(--text-primary);">Nick</span>
+            <span style="color:var(--accent);font-size:0.75rem;">·</span>
+            <span style="font-size:0.78rem;color:var(--text-secondary);">Co-Founder, Signature Car Care</span>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.72;margin:0;font-style:italic;">"As a business owner, I've grown Signature Car Care's online presence from the ground up — so I know firsthand what it takes to bring in real customers. I build your site to the same standard I hold my own."</p>
         </div>
       </div>
 
@@ -2094,10 +2236,11 @@
 <!-- ═══════════════════════════════════════════════
      FOOTER
 ═══════════════════════════════════════════════ -->
-<footer style="background:rgba(255,255,255,0.015);border-top:1px solid var(--glass-border);">
+<hr class="section-divider">
+<footer style="background:rgba(255,255,255,0.015);">
 
   <!-- Large wordmark display (Mitra-style) -->
-  <div style="padding:5rem 2rem 3rem;border-bottom:1px solid var(--glass-border);overflow:hidden;position:relative;">
+  <div style="padding:5rem 2rem 5rem;overflow:hidden;position:relative;">
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:200px;background:radial-gradient(ellipse, rgba(91,141,239,0.07) 0%, transparent 70%);pointer-events:none;filter:blur(40px);"></div>
     <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem;">
       <div>
@@ -2108,11 +2251,13 @@
         </a>
       </div>
       <!-- Giant wordmark -->
-      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(3rem, 8vw, 7rem);letter-spacing:-0.04em;color:transparent;background:linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(148,163,255,0.12) 100%);-webkit-background-clip:text;background-clip:text;line-height:1;user-select:none;">
+      <div style="font-family:'Ephesis',cursive;font-size:clamp(2.5rem, 7vw, 6rem);color:transparent;background:linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(148,163,255,0.12) 100%);-webkit-background-clip:text;background-clip:text;line-height:1;user-select:none;">
         Signature Scales
       </div>
     </div>
   </div>
+
+  <hr class="section-divider">
 
   <!-- Footer nav row -->
   <div class="container" style="padding:1.75rem 2rem;">
@@ -2147,17 +2292,10 @@
     navbar.classList.toggle('scrolled', window.scrollY > 20);
   }, { passive: true });
 
-  document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const name = document.getElementById('name').value.trim();
-    const business = document.getElementById('business').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const message = document.getElementById('message').value.trim();
-    const subject = encodeURIComponent(`Website Inquiry — ${business}`);
-    const body = encodeURIComponent(`Name: ${name}\nBusiness: ${business}\nEmail: ${email}\n\nMessage:\n${message}`);
-    window.location.href = `mailto:nictomko1@gmail.com?subject=${subject}&body=${body}`;
-  });
+  window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+  formspree('initForm', { formElement: '#contactForm', formId: 'mrerlbev' });
 </script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
 <script>
   // ── Pricing: Seamless scroll-triggered entrance → focus animation ──
@@ -2401,9 +2539,12 @@
   function triggerExpand(e) {
     if (animState !== 'idle') return;
 
-    // ── Lamp exit: bars close inward ──
+    // ── Lamp exit: set inline so animation starts this frame ──
     lampContainer.classList.remove('lamp-enter');
-    lampContainer.classList.add('lamp-exit');
+    document.getElementById('lamp-left').style.animation  = 'lampConeExit 0.35s ease-in-out 0s forwards';
+    document.getElementById('lamp-right').style.animation = 'lampConeExit 0.35s ease-in-out 0s forwards';
+    document.getElementById('lamp-line').style.animation  = 'lampLineExit 0.7s ease-out 0s both';
+    document.getElementById('lamp-orb').style.animation   = 'lampOrbExit 0.25s ease-in-out 0s forwards';
 
     e.preventDefault();
     animState = 'expanding';
@@ -2473,6 +2614,138 @@
     lampContainer.classList.add('lamp-enter');
   }, 200);
 })();
+</script>
+<script>
+(function() {
+  var form = document.getElementById('contactForm');
+  var btn = document.getElementById('submitBtn');
+  var label = btn.querySelector('.btn-label');
+  var formFields = document.getElementById('formFields');
+  var sentConfirm = document.getElementById('sentConfirm');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    var data = new FormData(form);
+    fetch('https://formspree.io/f/mrerlbev', {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    btn.classList.add('btn-sending');
+    label.textContent = 'Sending\u2026';
+
+    setTimeout(function() {
+      btn.classList.remove('btn-sending');
+      btn.classList.add('btn-sent');
+      btn.disabled = true;
+      label.textContent = 'Sent';
+      sentConfirm.classList.add('visible');
+    }, 2000);
+  });
+})();
+</script>
+<script>
+(function () {
+  function matchContactHeight() {
+    var grid = document.querySelector('.contact-grid');
+    if (!grid) return;
+    var cols = grid.children;
+    if (cols.length < 3) return;
+    cols[1].style.height = '';
+    cols[2].style.height = '';
+    if (window.innerWidth <= 768) return;
+    var h = cols[0].offsetHeight;
+    cols[1].style.height = h + 'px';
+    cols[2].style.height = h + 'px';
+  }
+  window.addEventListener('load', matchContactHeight);
+  window.addEventListener('resize', matchContactHeight);
+})();
+</script>
+
+<script type="application/ld+json">
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Signature Scales",
+    "url": "https://www.signaturescales.ca/",
+    "description": "Signature Scales builds and hosts professional websites for small businesses. Starting at $275 with monthly hosting plans from $50/mo.",
+    "email": "signaturescalescontact@gmail.com",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "signaturescalescontact@gmail.com",
+      "contactType": "customer support"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Signature Scales",
+    "url": "https://www.signaturescales.ca/",
+    "description": "Professional web design and hosting agency for small businesses.",
+    "email": "signaturescalescontact@gmail.com",
+    "priceRange": "$$",
+    "areaServed": "CA",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Web Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Website Build",
+            "description": "Custom professional website built from scratch for small businesses."
+          },
+          "price": "275",
+          "priceCurrency": "CAD",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "275",
+            "priceCurrency": "CAD",
+            "description": "One-time build fee"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Hosting & Maintenance",
+            "description": "Monthly website hosting, updates, and maintenance for small businesses."
+          },
+          "price": "50",
+          "priceCurrency": "CAD",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "50",
+            "priceCurrency": "CAD",
+            "unitCode": "MON",
+            "description": "Monthly hosting plan"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Signature Scales",
+    "url": "https://www.signaturescales.ca/",
+    "description": "Professional websites built for small businesses.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://www.signaturescales.ca/?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  }
+]
 </script>
 </body>
 </html>

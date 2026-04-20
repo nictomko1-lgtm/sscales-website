@@ -1,0 +1,17 @@
+{
+  "name": "Signature Scales",
+  "short_name": "Sig. Scales",
+  "description": "Professional websites built for small businesses.",
+  "start_url": "/",
+  "display": "browser",
+  "theme_color": "#07101F",
+  "background_color": "#07101F",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
