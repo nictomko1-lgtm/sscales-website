@@ -1466,17 +1466,28 @@
     will-change: auto !important;
   }
 
-  /* Navbar: hide Get Started button */
+  /* Navbar: hide Get Started button and logo */
   nav#navbar .btn-glass { display: none !important; }
+  nav#navbar .wordmark { display: none !important; }
 
   /* Prevent horizontal overflow / side-scroll */
   html, body { overflow-x: hidden !important; max-width: 100vw; }
 
+  /* Hero: add breathing room so text isn't flush to screen edge */
+  #hero .container { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+
   /* Hide the entire Process section */
   section:has(.steps-row) { display: none !important; }
 
-  /* Contact grid: collapse 3-col to 1-col */
-  .contact-grid { grid-template-columns: 1fr !important; }
+  /* Contact grid: collapse 3-col to 1-col, fix overflow */
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Prevent long email address from overflowing card */
+  #contact .btn-glass { word-break: break-all; white-space: normal !important; }
 }
 </style>
 </head>
@@ -2339,7 +2350,7 @@
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:200px;background:radial-gradient(ellipse, rgba(91,141,239,0.07) 0%, transparent 70%);pointer-events:none;filter:blur(40px);"></div>
     <div class="container" style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2rem;">
       <!-- Giant wordmark -->
-      <div style="font-family:'Ephesis',cursive;font-size:clamp(2.5rem, 7vw, 6rem);color:transparent;background:linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(148,163,255,0.12) 100%);-webkit-background-clip:text;background-clip:text;line-height:1.2;user-select:none;">
+      <div style="font-family:'Ephesis',cursive;font-size:clamp(2.5rem, 7vw, 6rem);color:transparent;background:linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(148,163,255,0.15) 100%);-webkit-background-clip:text;background-clip:text;line-height:1.2;user-select:none;">
         Signature Scales
       </div>
     </div>
@@ -2433,20 +2444,23 @@
   });
   } // end desktop-only pricing animation
 
-  // Mobile: count-up only (cards always visible — no stagger/dim)
+  // Mobile: count-up fires per-card as each scrolls into view
   if (window.matchMedia('(max-width: 768px)').matches) {
-    const mobilePricingObserver = new IntersectionObserver((entries) => {
-      if (!entries[0].isIntersecting) return;
-      mobilePricingObserver.disconnect();
-      const priceTargets = [275, 50, 75];
-      const priceIds = ['price-num-build', 'price-num-starter', 'price-num-growth'];
-      priceIds.forEach((id, i) => {
-        const el = document.getElementById(id);
-        if (el && window.animateCounter) window.animateCounter(el, priceTargets[i], '', 900);
-      });
-    }, { threshold: 0.15 });
-    const pricingSection = document.getElementById('pricing');
-    if (pricingSection) mobilePricingObserver.observe(pricingSection);
+    [
+      { cardId: 'pricing-card-build',    numId: 'price-num-build',    target: 275 },
+      { cardId: 'pricing-card-starter',  numId: 'price-num-starter',  target: 50  },
+      { cardId: 'pricing-card-growth',   numId: 'price-num-growth',   target: 75  },
+    ].forEach(({ cardId, numId, target }) => {
+      const card = document.getElementById(cardId);
+      const el   = document.getElementById(numId);
+      if (!card || !el) return;
+      const obs = new IntersectionObserver((entries) => {
+        if (!entries[0].isIntersecting) return;
+        obs.disconnect();
+        if (window.animateCounter) window.animateCounter(el, target, '', 900);
+      }, { threshold: 0.5 });
+      obs.observe(card);
+    });
   }
 
   // ── Services: Scroll-triggered entrance ──
