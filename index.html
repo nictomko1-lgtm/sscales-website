@@ -1465,6 +1465,18 @@
     animation: none !important;
     will-change: auto !important;
   }
+
+  /* Navbar: hide Get Started button */
+  nav#navbar .btn-glass { display: none !important; }
+
+  /* Prevent horizontal overflow / side-scroll */
+  html, body { overflow-x: hidden !important; max-width: 100vw; }
+
+  /* Hide the entire Process section */
+  section:has(.steps-row) { display: none !important; }
+
+  /* Contact grid: collapse 3-col to 1-col */
+  .contact-grid { grid-template-columns: 1fr !important; }
 }
 </style>
 </head>
@@ -2420,6 +2432,22 @@
     card.addEventListener('mouseleave', () => card.classList.remove('pricing-hover-reveal'));
   });
   } // end desktop-only pricing animation
+
+  // Mobile: count-up only (cards always visible — no stagger/dim)
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    const mobilePricingObserver = new IntersectionObserver((entries) => {
+      if (!entries[0].isIntersecting) return;
+      mobilePricingObserver.disconnect();
+      const priceTargets = [275, 50, 75];
+      const priceIds = ['price-num-build', 'price-num-starter', 'price-num-growth'];
+      priceIds.forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (el && window.animateCounter) window.animateCounter(el, priceTargets[i], '', 900);
+      });
+    }, { threshold: 0.15 });
+    const pricingSection = document.getElementById('pricing');
+    if (pricingSection) mobilePricingObserver.observe(pricingSection);
+  }
 
   // ── Services: Scroll-triggered entrance ──
   const serviceBuild   = document.getElementById('service-card-build');
