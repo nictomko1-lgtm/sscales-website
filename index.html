@@ -616,8 +616,8 @@
       z-index: 0;
       pointer-events: none;
       background-image:
-        linear-gradient(to right, rgba(255,255,255,0.045) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,0.045) 1px, transparent 1px);
+        linear-gradient(to right, rgba(255,255,255,0.0405) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.0405) 1px, transparent 1px);
       background-size: 40px 40px;
       mask-image: radial-gradient(ellipse at center, black 50%, transparent 100%);
       -webkit-mask-image: radial-gradient(ellipse at center, black 50%, transparent 100%);
@@ -779,7 +779,7 @@
     }
     @keyframes floatYStep {
       0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(-6.6px); }
+      50%       { transform: translateY(-8px); }
     }
 
     /* ── Hero gradient orb ── */
@@ -1394,6 +1394,79 @@
       );
     }
   </style>
+
+<style>
+/* ── Mobile Overrides (max-width: 768px) ──────────────────────────
+   Desktop is completely unaffected by these rules.
+─────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+
+  /* Intro overlay — hidden immediately; JS also handles this */
+  #intro-overlay { display: none !important; }
+
+  /* Lamp elements live inside intro overlay but belt-and-suspenders */
+  #lamp-container, #lamp-left, #lamp-right, #lamp-line, #lamp-orb {
+    display: none !important;
+    animation: none !important;
+  }
+
+  /* Hero elements must be fully visible with no overlay */
+  .hero-animate {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  /* Hero orb drift — wastes paint on mobile */
+  .hero-orb {
+    animation: none !important;
+    will-change: auto !important;
+  }
+
+  /* Shimmer sweep on pricing CTA — disable */
+  .shimmer-overlay {
+    display: none !important;
+    animation: none !important;
+  }
+
+  /* Pricing focus/dim system — disabled on mobile */
+  .pricing-dimmed, .pricing-focused {
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  /* Hero headline: readable on small screens */
+  .hero-headline {
+    font-size: 2.2rem !important;
+    line-height: 1.15 !important;
+  }
+
+  /* Hero badge: allow wrapping on narrow screens */
+  .hero-badge {
+    font-size: 0.68rem;
+    white-space: normal;
+    text-align: center;
+  }
+
+  /* Touch-friendly CTA buttons */
+  .btn-primary, .btn-glass {
+    min-height: 48px;
+  }
+
+  /* Contact form: collapse 2-col name/business row to 1 col */
+  #formFields > div:first-child {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Services grid icons: disable floatY */
+  #service-card-build [style*="width:46px;height:46px"],
+  #service-card-hosting [style*="width:46px;height:46px"] {
+    animation: none !important;
+    will-change: auto !important;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -1504,16 +1577,7 @@
 ═══════════════════════════════════════════════ -->
 <nav id="navbar">
   <a href="#hero" class="wordmark">
-    <div class="wordmark-icon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="3" x2="12" y2="21"/>
-        <path d="M5 21h14"/>
-        <path d="M5 9l-3 6h6l-3-6z"/>
-        <path d="M19 9l-3 6h6l-3-6z"/>
-        <line x1="5" y1="9" x2="19" y2="9"/>
-      </svg>
-    </div>
-    <span class="wordmark-text">Signature Scales</span>
+    <img src="assets/signature-scales-ruler-mono-white.svg" alt="Signature Scales" style="height:60px;width:auto;transform:translateY(5%);" />
   </a>
 
   <div class="nav-links" style="display:flex;gap:2rem;align-items:center;">
@@ -2053,19 +2117,19 @@
 
     <div class="steps-row" style="display:flex;align-items:flex-start;max-width:860px;margin:0 auto;">
       <div class="scroll-fade" style="--i:0;flex:1;text-align:center;">
-        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatYStep 3.6s ease-in-out 0s infinite, breatheGlow 3s ease-in-out 0s infinite;">1</div></div>
+        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatYStep 2.8s ease-in-out 0s infinite, breatheGlow 3s ease-in-out 0s infinite;">1</div></div>
         <h3 class="heading-lg" style="font-size:1.1rem;color:var(--text-primary);margin-bottom:0.6rem;">Reach Out</h3>
         <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.65;max-width:200px;margin:0 auto;">Fill out the contact form or send an email. Tell us about your business.</p>
       </div>
       <div class="step-connector"></div>
       <div class="scroll-fade" style="--i:1;flex:1;text-align:center;">
-        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatYStep 3.6s ease-in-out 0.5s infinite, breatheGlow 3s ease-in-out 0.5s infinite;">2</div></div>
+        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatYStep 2.8s ease-in-out 0.5s infinite, breatheGlow 3s ease-in-out 0.5s infinite;">2</div></div>
         <h3 class="heading-lg" style="font-size:1.1rem;color:var(--text-primary);margin-bottom:0.6rem;">We Build</h3>
         <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.65;max-width:200px;margin:0 auto;">Your custom site is designed and delivered — typically within one week.</p>
       </div>
       <div class="step-connector"></div>
       <div class="scroll-fade" style="--i:2;flex:1;text-align:center;">
-        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatYStep 3.6s ease-in-out 1.0s infinite, breatheGlow 3s ease-in-out 1.0s infinite;">3</div></div>
+        <div style="display:flex;justify-content:center;margin-bottom:1.25rem;"><div class="step-number" style="animation:floatYStep 2.8s ease-in-out 1.0s infinite, breatheGlow 3s ease-in-out 1.0s infinite;">3</div></div>
         <h3 class="heading-lg" style="font-size:1.1rem;color:var(--text-primary);margin-bottom:0.6rem;">You Grow</h3>
         <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.65;max-width:200px;margin:0 auto;">Go live, choose a hosting plan, and start getting found by more customers.</p>
       </div>
@@ -2259,18 +2323,11 @@
 <footer style="background:rgba(255,255,255,0.015);">
 
   <!-- Large wordmark display (Mitra-style) -->
-  <div style="padding:5rem 2rem 5rem;overflow:hidden;position:relative;">
+  <div style="padding:4.04rem 2rem 5.46rem;overflow:visible;position:relative;">
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:200px;background:radial-gradient(ellipse, rgba(91,141,239,0.07) 0%, transparent 70%);pointer-events:none;filter:blur(40px);"></div>
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem;">
-      <div>
-        <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;">Ready to get started?</p>
-        <a href="#contact" class="btn-primary" style="font-size:0.95rem;padding:0.85rem 2rem;">
-          Let's Build Your Website
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
+    <div class="container" style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2rem;">
       <!-- Giant wordmark -->
-      <div style="font-family:'Ephesis',cursive;font-size:clamp(2.5rem, 7vw, 6rem);color:transparent;background:linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(148,163,255,0.12) 100%);-webkit-background-clip:text;background-clip:text;line-height:1;user-select:none;">
+      <div style="font-family:'Ephesis',cursive;font-size:clamp(2.5rem, 7vw, 6rem);color:transparent;background:linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(148,163,255,0.12) 100%);-webkit-background-clip:text;background-clip:text;line-height:1.2;user-select:none;">
         Signature Scales
       </div>
     </div>
@@ -2280,20 +2337,8 @@
 
   <!-- Footer nav row -->
   <div class="container" style="padding:1.75rem 2rem;">
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.25rem;">
-      <a href="#hero" class="wordmark">
-        <div class="wordmark-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="3" x2="12" y2="21"/>
-            <path d="M5 21h14"/>
-            <path d="M5 9l-3 6h6l-3-6z"/>
-            <path d="M19 9l-3 6h6l-3-6z"/>
-            <line x1="5" y1="9" x2="19" y2="9"/>
-          </svg>
-        </div>
-        <span class="wordmark-text">Signature Scales</span>
-      </a>
-      <nav style="display:flex;gap:2rem;flex-wrap:wrap;">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;text-align:center;">
+      <nav style="display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;">
         <a href="#services" class="nav-link" style="font-size:0.82rem;">Services</a>
         <a href="#pricing" class="nav-link" style="font-size:0.82rem;">Pricing</a>
         <a href="#portfolio" class="nav-link" style="font-size:0.82rem;">Portfolio</a>
@@ -2325,6 +2370,7 @@
   const allCards  = [pricingBuild, pricingStarter, pricingGrowth];
 
   // Hide all cards initially via inline style (no class — avoids !important conflicts)
+  if (!window.matchMedia('(max-width: 768px)').matches) {
   allCards.forEach(c => { c.style.opacity = '0'; c.style.visibility = 'hidden'; });
 
   const pricingObserver = new IntersectionObserver((entries) => {
@@ -2373,6 +2419,7 @@
     card.addEventListener('mouseenter', () => card.classList.add('pricing-hover-reveal'));
     card.addEventListener('mouseleave', () => card.classList.remove('pricing-hover-reveal'));
   });
+  } // end desktop-only pricing animation
 
   // ── Services: Scroll-triggered entrance ──
   const serviceBuild   = document.getElementById('service-card-build');
@@ -2447,6 +2494,13 @@
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.scroll-fade').forEach(el => fadeObserver.observe(el));
+
+  // Mobile: strip floatYStep inline animation from step numbers
+  if (window.matchMedia('(max-width: 768px)').matches) {
+    document.querySelectorAll('.step-number').forEach(function(el) {
+      el.style.animation = 'breatheGlow 3s ease-in-out infinite';
+    });
+  }
 })();
 </script>
 
@@ -2454,6 +2508,15 @@
 <script>
 (function() {
   'use strict';
+
+  // Mobile: skip entire intro, show hero immediately
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  if (isMobile) {
+    const _overlay = document.getElementById('intro-overlay');
+    if (_overlay) _overlay.style.display = 'none';
+    document.body.style.overflow = '';
+    return;
+  }
 
   // ── Elements ──────────────────────────────────────────
   const overlay       = document.getElementById('intro-overlay');

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" width="640" height="200">
+  <title>Signature Scales — Ruler Lockup (mono / white)</title>
+  <text x="320" y="82" text-anchor="middle" font-family="&#39;Cormorant Garamond&#39;, &#39;Times New Roman&#39;, serif" font-size="60" font-weight="500" letter-spacing="6" fill="#F5F3EE">SIGNATURE</text>
+  <g transform="translate(100,110)">
+    <line x1="0" y1="2" x2="440" y2="2" stroke="#F5F3EE" stroke-width="1.5"></line>
+    <g stroke="#F5F3EE" stroke-width="1.5">
+      <line x1="0" y1="2" x2="0" y2="16"></line>
+      <line x1="22" y1="2" x2="22" y2="10"></line>
+      <line x1="44" y1="2" x2="44" y2="10"></line>
+      <line x1="66" y1="2" x2="66" y2="10"></line>
+      <line x1="88" y1="2" x2="88" y2="10"></line>
+      <line x1="110" y1="2" x2="110" y2="16"></line>
+      <line x1="132" y1="2" x2="132" y2="10"></line>
+      <line x1="154" y1="2" x2="154" y2="10"></line>
+      <line x1="176" y1="2" x2="176" y2="10"></line>
+      <line x1="198" y1="2" x2="198" y2="10"></line>
+      <line x1="220" y1="2" x2="220" y2="16"></line>
+      <line x1="242" y1="2" x2="242" y2="10"></line>
+      <line x1="264" y1="2" x2="264" y2="10"></line>
+      <line x1="286" y1="2" x2="286" y2="10"></line>
+      <line x1="308" y1="2" x2="308" y2="10"></line>
+      <line x1="330" y1="2" x2="330" y2="16"></line>
+      <line x1="352" y1="2" x2="352" y2="10"></line>
+      <line x1="374" y1="2" x2="374" y2="10"></line>
+      <line x1="396" y1="2" x2="396" y2="10"></line>
+      <line x1="418" y1="2" x2="418" y2="10"></line>
+    </g>
+    <line x1="440" y1="2" x2="440" y2="20" stroke="#F5F3EE" stroke-width="3" stroke-linecap="round"></line>
+  </g>
+</svg>
